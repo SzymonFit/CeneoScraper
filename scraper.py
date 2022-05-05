@@ -1,10 +1,13 @@
 from distutils.filelist import findall
 from typing import Type
+from unicodedata import numeric
 import requests
 from bs4 import BeautifulSoup
 import json
 
-url = "https://www.ceneo.pl/63490289#tab=reviews"
+url = input("Wprowadź link: ")
+numeric_filter = filter(str.isdigit, url)
+numeric_string = "".join(numeric_filter)
 all_opinions = []
 while(url):
     response = requests.get(url)
@@ -54,5 +57,5 @@ while(url):
         url =  "https://www.ceneo.pl"+page.select_one("a.pagination__next")["href"]
     except TypeError:
         url = None
-with open("opinions/63490289.json", "w", encoding="UTF-8") as jf:
+with open("opinions/" + numeric_string + ".json", "w", encoding="UTF-8") as jf:
     json.dump(all_opinions, jf, indent=4, ensure_ascii=False)
